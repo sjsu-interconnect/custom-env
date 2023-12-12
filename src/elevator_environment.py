@@ -13,7 +13,7 @@ class ElevatorEnv(gym.Env):
     Reward: -x for every person in elevator, -y for every person waiting outside elevator
     """
 
-    def __init__(self, num_floors):
+    def __init__(self, num_floors, max_timesteps=200):
         self.num_floors = num_floors
 
         """
@@ -21,17 +21,21 @@ class ElevatorEnv(gym.Env):
         the floors people are waiting for outside, and the floors people are waiting for inside
         """
 
+        # Set abitrary maximum number of people per layer
         self.observation_space = spaces.Dict(
             {
                 "position": spaces.Discrete(self.num_floors),
-                "num_people": spaces.Box(low=0, shape=(1, 1), dtype=np.int32),
+                "num_people": spaces.Discrete(2000),
                 "floors_selected": spaces.MultiBinary(self.num_floors),
                 "floors_waiting": spaces.MultiBinary(self.num_floors)
             }
         )
 
-        # We have three actions, "up", "stay", and "down"
+        # We have three actions, "down", "stay", and "up"
         self.action_space = spaces.Discrete(3)
+
+        # Maximum timesteps
+        self.max_timesteps = max_timesteps
 
         self.arrival_pattern = None  # TODO: Implement different arrival patterns if time allows
 
@@ -50,14 +54,19 @@ class ElevatorEnv(gym.Env):
         }
 
     def reset(self, seed=None, options=None):
+        super().reset(seed=seed)
+
         self._position = 0  # Start on the first floor
         self._num_people = 0  # No people in the elevator
-        self._floors_selected = np.zeros((self.num_floors, 1), dtype=np.int8)  # Boolean array of selected floors inside
-        self._floors_waiting = np.zeros((self.num_floors, 1), dtype=np.int8)  # Boolean array of selected floors outside
+        self._floors_selected = np.zeros(self.num_floors, dtype=np.int8)  # Boolean array of selected floors inside
+        self._floors_waiting = np.zeros(self.num_floors, dtype=np.int8)  # Boolean array of selected floors outside
 
         # Keep track of other variables not in observation
-        self._people_waiting = np.zeros((self.num_floors, 1), dtype=np.int32)  # People outside elevator
-        self._people_inside = np.zeros((self.num_floors, 1), dtype=np.int32)  # People inside elevator
+        self._people_waiting = np.zeros(self.num_floors, dtype=np.int32)  # People outside elevator
+        self._people_inside = np.zeros(self.num_floors, dtype=np.int32)  # People inside elevator
+
+        # Timestep tracking
+        self.num_timesteps = 0
 
         # Get the observation and info
         observation = self._get_obs()

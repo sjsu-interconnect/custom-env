@@ -1,4 +1,4 @@
-# Project Name
+# Applying RL to Elevator Movement
 ## Project Summary
 <!-- Around 200 Words -->
 <!-- Cover (1) What problem you are solving, (2) Who will use this RL module and be happy with the learning, and (3) a brief description of the results -->
@@ -51,6 +51,23 @@ This is a continuing task. For speed of training, the episode is truncated after
 ## Results
 For all results below, the DQN agent was tested on an elevator system with eight floors. The DQN agent was not able to learn the task at all, with rewards per episode decreasing.
 
+### Mean Return per Episode
 ![DQN Mean Reward](data/ray_tune_episode_reward_mean.svg "Mean Reward per Episode")
+
+Looking at the mean return per episode, it becomes apparent that the agent performs worse over time. Although the rewards increase for the first few thousand episodes, the average return begins to decrease after that. After 10 thousand episodes, the model performs worse than when it started.
+
+To analyze the source of this error, we can try to analyze some other plots.
+
+### Mean Q Over Per Episode
+![DQN Mean Q-value](data/ray_tune_info_learner_default_policy_learner_stats_mean_q.svg "Mean Q-value Per Episode")
+
+As the episodes progress, we see the Q-values continue to decrease. This could indicate that the model is still learning, as the Q-values have not stabilized at this point. However, this could also be caused by POMDP interfering with the Q-values of each state.
+
+### Mean TD Error Per Episode
+![DQN Mean TD Error](data/ray_tune_info_learner_default_policy_mean_td_error.svg "Mean TD Error Per Episode")
+
+We can see as the episodes progress that the TD error continues to increase over time. This is an indication that the POMDP is crippling the learning process as the network cannot assign a proper Q-value to a state. This variance is enough to explain why the agent failed to learn on this problem.
+
+To alleviate the issue with the agent not being able to learn, next steps could be fully revealing the number of people waiting at each floor and the number of people who are inside the elevator who want to go to a certain floor. As the reward from this point becomes fully deterministic, this should stabilize the learning. However, for this to be practical in a real world scenario, elevator manufacturers must also somehow gather data of how many people are waiting for each floor for example, and this could range from being impractical to being impossible.
 
 [1] V. Mnih et al., ‘Playing Atari with Deep Reinforcement Learning’, arXiv [cs.LG]. 2013.

@@ -128,4 +128,5 @@ class ElevatorEnv(gym.Env):
         return observation, reward, terminated, truncated, info
 
     def close(self):
-        pass
+        # No resources to close
+        return

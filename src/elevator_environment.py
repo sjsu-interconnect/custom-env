@@ -132,7 +132,7 @@ class ElevatorEnv(gym.Env):
         observation = self._get_obs()
         info = self._get_info()
         terminated = False  # Never ends
-        truncated = (self.num_timesteps < self.max_timesteps)  # Max timesteps
+        truncated = (self.num_timesteps > self.max_timesteps)  # Max timesteps
 
         return observation, reward, terminated, truncated, info
 

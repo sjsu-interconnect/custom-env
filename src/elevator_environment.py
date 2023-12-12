@@ -33,14 +33,37 @@ class ElevatorEnv(gym.Env):
         # We have three actions, "up", "stay", and "down"
         self.action_space = spaces.Discrete(3)
 
-        # Keep track of other variables not in observation
-        self.people_waiting = np.empty((self.num_floors, 1), dtype=np.int32)  # People outside elevator
-        self.people_inside = np.empty((self.num_floors, 1), dtype=np.int32)  # People inside elevator
-
         self.arrival_pattern = None  # TODO: Implement different arrival patterns if time allows
 
-    def reset(self):
-        pass
+    def _get_obs(self):
+        return {
+            "position": self._position,
+            "num_people": self._num_people,
+            "floors_selected": self._floors_selected,
+            "floors_waiting": self._floors_waiting
+        }
+
+    def _get_info(self):
+        return {
+            "people_waiting": self._people_waiting,
+            "people_inside": self._people_inside
+        }
+
+    def reset(self, seed=None, options=None):
+        self._position = 0  # Start on the first floor
+        self._num_people = 0  # No people in the elevator
+        self._floors_selected = np.zeros((self.num_floors, 1), dtype=np.int8)  # Boolean array of selected floors inside
+        self._floors_waiting = np.zeros((self.num_floors, 1), dtype=np.int8)  # Boolean array of selected floors outside
+
+        # Keep track of other variables not in observation
+        self._people_waiting = np.zeros((self.num_floors, 1), dtype=np.int32)  # People outside elevator
+        self._people_inside = np.zeros((self.num_floors, 1), dtype=np.int32)  # People inside elevator
+
+        # Get the observation and info
+        observation = self._get_obs()
+        info = self._get_info()
+
+        return observation, info
 
     def step(self, action):
         # Make the changes in action

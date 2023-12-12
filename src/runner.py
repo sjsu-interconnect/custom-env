@@ -16,7 +16,7 @@ config = config.environment(env="Elevator")
 
 algo = DQN(config=config)
 
-for _ in range(10):
+for _ in range(20):
     algo.train()
 
 algo.evaluate()

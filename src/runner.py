@@ -8,13 +8,15 @@ def env_creator(env_config):
 
 
 # Register the name of the env
-register_env("MyGrid", env_creator)
+register_env("Elevator", env_creator)
 
 # Getting the config and setting the environment
 config = DQNConfig()
-config = config.environment(env="MyGrid")
+config = config.environment(env="Elevator")
 
 algo = DQN(config=config)
 
 for _ in range(10):
     algo.train()
+
+algo.evaluate()

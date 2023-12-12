@@ -37,7 +37,7 @@ At every time step, the agent receives a reward of -1 for every person waiting o
 ## RL Algorithm 
 For this problem, we will be applying a DQN algorithm to test this environment. DQN is an off-policy neural-network based method which is strong inspired by Q-learning, taking in a continuous state space and a discrete action space. [1]
 
-In this problem, although we have a discrete state representation, RLlib only offers DQN as a Q-learning solution. 
+We will be using Ray RLlib's DQN implementation for this problem. In this problem, although we have a discrete state representation, RLlib only offers DQN as a Q-learning solution. We utilized the default parameters for RLlib's DQN algorithm.
 
 
 ## Starting State [if applicable]
@@ -49,6 +49,8 @@ This is a continuing task.
 This is a continuing task. For speed of training, the episode is truncated after 200 experiences.
 
 ## Results
-The DQN agent was not able to learn the task at all, with rewards per episode decreasing
+For all results below, the DQN agent was tested on an elevator system with eight floors. The DQN agent was not able to learn the task at all, with rewards per episode decreasing.
+
+![DQN Mean Reward](data/ray_tune_episode_reward_mean.svg "Mean Reward per Episode")
 
 [1] V. Mnih et al., ‘Playing Atari with Deep Reinforcement Learning’, arXiv [cs.LG]. 2013.

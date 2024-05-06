@@ -1,5 +1,5 @@
 # Installation
-- ray rllib
+- ray rllib (Use 2.20+)
   - [Instruction](https://docs.ray.io/en/latest/ray-overview/installation.html)
   - pip example ```pip install -U "ray[rllib]"```
 - tensorflow2

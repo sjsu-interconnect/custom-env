@@ -5,7 +5,7 @@
 # Agent Environment Cycle (AEC) vs. Parallel Environments
 - By default, PettingZoo models games as [Agent Environment Cycle (AEC) environments](https://pettingzoo.farama.org/api/aec/#about-aec)
 - In an AEC environment, agents act sequentially, receiving updated observations and rewards before taking an action
-  - ```agent_selector``` steps through agents in a cycle
+  - ```AgentSelector``` steps through agents in a cycle
 - We have a secondary [parallel API](https://pettingzoo.farama.org/api/parallel/) for environments where all agents have simultaneous actions and observations
 - Examples can be found on [the Environment Creation page](https://pettingzoo.farama.org/content/environment_creation/)
 

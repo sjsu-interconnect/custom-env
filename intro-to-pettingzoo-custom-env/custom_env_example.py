@@ -1,15 +1,3 @@
-# Now that we have a basic understanding of the structure of environment repositories, we can start thinking about the fun part - environment logic!
-
-# For this tutorial, we will be creating a two-player game consisting of a prisoner, trying to escape, and a guard, trying to catch the prisoner. This game will be played on a 7x7 grid, where:
-
-# The prisoner starts in the top left corner,
-
-# The guard starts in the bottom right corner,
-
-# The escape door is randomly placed in the middle of the grid
-
-# Both the prisoner and the guard can move in any of the four cardinal directions (up, down, left, right).
-
 import functools
 import random
 from copy import copy
@@ -81,9 +69,6 @@ class CustomEnvironment(ParallelEnv):
         self.escape_x = random.randint(2, 5)
         self.escape_y = random.randint(2, 5)
 
-        # A simple encoding to represent the positions of the agents and escape
-        # Each agent refers to its own obs. 
-        # Even when the state is identical, we need to prepare a duplicated view for each agent
         observations = {
             a: (
                 self.prisoner_x + 7 * self.prisoner_y,

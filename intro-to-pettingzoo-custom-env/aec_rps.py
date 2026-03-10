@@ -3,9 +3,10 @@ import functools
 import gymnasium
 import numpy as np
 from gymnasium.spaces import Discrete
+from gymnasium.utils import seeding
 
 from pettingzoo import AECEnv
-from pettingzoo.utils import agent_selector, wrappers
+from pettingzoo.utils import AgentSelector, wrappers
 
 ROCK = 0
 PAPER = 1
@@ -74,10 +75,7 @@ class raw_env(AECEnv):
         self.agent_name_mapping = dict(
             zip(self.possible_agents, list(range(len(self.possible_agents))))
         )
-
         # optional: we can define the observation and action spaces here as attributes to be used in their corresponding methods
-        # Each agent refers to its own action and obs spaces. 
-        # Even when the state/action spaces are identical, we need to prepare a duplicated view for each agent
         self._action_spaces = {agent: Discrete(3) for agent in self.possible_agents}
         self._observation_spaces = {
             agent: Discrete(4) for agent in self.possible_agents
@@ -96,7 +94,8 @@ class raw_env(AECEnv):
     # If your spaces change over time, remove this line (disable caching).
     @functools.lru_cache(maxsize=None)
     def action_space(self, agent):
-        return Discrete(3)
+        # We can seed the action space to make the environment deterministic.
+        return Discrete(3, seed=self.np_random_seed)
 
     def render(self):
         """
@@ -115,7 +114,7 @@ class raw_env(AECEnv):
             )
         else:
             string = "Game over"
-        # print(string)
+        print(string)
 
     def observe(self, agent):
         """
@@ -148,6 +147,9 @@ class raw_env(AECEnv):
         can be called without issues.
         Here it sets up the state dictionary which is used by step() and the observations dictionary which is used by step() and observe()
         """
+        # Unlike gymnasium's Env, the environment is responsible for setting the random seed explicitly.
+        if seed is not None:
+            self.np_random, self.np_random_seed = seeding.np_random(seed)
         self.agents = self.possible_agents[:]
         self.rewards = {agent: 0 for agent in self.agents}
         self._cumulative_rewards = {agent: 0 for agent in self.agents}
@@ -158,9 +160,9 @@ class raw_env(AECEnv):
         self.observations = {agent: NONE for agent in self.agents}
         self.num_moves = 0
         """
-        Our agent_selector utility allows easy cyclic stepping through the agents list.
+        Our AgentSelector utility allows easy cyclic stepping through the agents list.
         """
-        self._agent_selector = agent_selector(self.agents) 
+        self._agent_selector = AgentSelector(self.agents)
         self.agent_selection = self._agent_selector.next()
 
     def step(self, action):

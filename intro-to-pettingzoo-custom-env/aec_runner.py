@@ -14,3 +14,5 @@ for agent in env.agent_iter():
 
     env.step(action)
 env.close()
+
+

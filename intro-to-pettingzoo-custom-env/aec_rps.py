@@ -215,7 +215,7 @@ class raw_env(AECEnv):
                 self.observations[i] = self.state[
                     self.agents[1 - self.agent_name_mapping[i]]
                 ]
-        else:
+        else: # Not the last agent
             # necessary so that observe() returns a reasonable observation at all times.
             self.state[self.agents[1 - self.agent_name_mapping[agent]]] = NONE
             # no rewards are allocated until both players give an action

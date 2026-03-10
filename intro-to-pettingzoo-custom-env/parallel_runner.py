@@ -9,3 +9,5 @@ while env.agents:
 
     observations, rewards, terminations, truncations, infos = env.step(actions)
 env.close()
+
+
